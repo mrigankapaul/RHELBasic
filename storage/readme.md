@@ -95,7 +95,7 @@ du -hcs /etc/ summary of the size of /etc directory
 - You can create Physical Volumes without any metadata as the metadata has info about the volume group and volume group can function with any one of the volumes in the group having the required metadata (Not Recommended)
 - Recommendation - Single Partition for a single device and then single volume for a device.
 - A volume group can have only a single extent size.
-- 
+- LVM snapshots - space efficient point in time copies of volume.
 ```
 pvcreate /dev/sdb1 // initialize a label
 pvcreate --metadatacopies 2 -v /dev/sdc1 // create a second copy of LVM metadata at the end of partition.
@@ -116,3 +116,47 @@ mkfs -t ext4 /dev/vgtest/lvtest // creating a file system on logical volume
 mkdir /lvm
 mount -t ext4 /dev/vgtest/lvtest /lvm // mount the logic volume
 ```
+
+
+### Advanced Logical Volume Manager
+- Device Mapper - Kernel based framework for advanced block storage management
+    - Mapped Devices(/dev/mapper/<dev> [linear, Striped, multipathed ....]) - Mapping Layer - Target Devices (/dev/sdb /dev/sdc)
+- Volume Striping - to increase IO performance
+- 
+```
+lvextend -L2G /dev/vgtest/lvtest // to grow a logic volume
+lvextend -L +1G /dev/vgtest/lvtest
+e2fsck -f /dev/vgtest/lvtest // resize the file system
+resize2fs /dev/vgtest/lvtest // resize the file system
+// For shrinking the volume // Backup your data
+umount /lvm
+e2fsck -f /dev/vgtest/lvtest
+resize2fs /dev/vgtest/lvtest
+lvreduce -L  -2G /dev/vgtest/lvtest
+e2fsck -f /dev/vgtest/lvtest
+lvcreate -L 10M -s -n snaplvtest /dev/vgtest/lvtest // to create a snapshot of a volume
+// reverting back to snapshot state
+umount /lvm /mountsnap // unmount the origin and snapshot
+lvconvert --merge /dev/vgtest/snaplvtest
+ mount -t ext4 /dev/vgtest/lvtest /lvm
+ cat /lvm/uberfile
+// You can grow the snapshot mannually using lvextend or auto by changes in vim /etc/lvm/lvm.conf
+lvcreate -L 100M --thinpool tppool vgtest // thin pool volume created
+lvcreate -V 1G --thin -n tplvsmall vgtest/tppool //overprovisioning of the volume using thin pool of 100m size
+lvcreate -V 100G --thin -n tpluber vgtest/tppool //over provisioning
+mkdir /mnt/small /mnt/uber
+mke2fs -t ext4 /dev/vgtest/tplvsmall
+mount -t ext4 /dev/vgtest/tplvsmall /mnt/small
+lvcreate -L 1G -n lvstripe1 -i4 vgtest // to create a Striped volume
+lvcreate -L 1G -n lvstripe2 -i2 -I128  vgtest /dev/sdc1 /dev/sdd1 // to create a striped volume with specified physical disk
+
+```
+
+
+###TODO
+- LVM Migration
+- Backing up and Recovery
+- Linux RAID
+- NFS
+- Samba
+- ISCSI
