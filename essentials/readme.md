@@ -82,4 +82,9 @@ tar -czf (gzip)
 tar -cjf (bzip2)
 gzip etc.tar // compression
 gunzip etc.tar.gz // expansion
+time bzip2 etc.tar // compression
+bunzip2 etc.tar.bz2 // expansion
+sudo tar -czf etc.tar.gz /etc // compession using tar command
+tar -xf etc.tar.gz // expansion
+
 ```
