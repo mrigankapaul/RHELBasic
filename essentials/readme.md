@@ -7,6 +7,8 @@ vagrant init generic/rhel8
 vagrant up
 vagrant ssh
 vagrant up 
+sudo subscription-manager register --username <<your-acc>> \
+    --password <your-password> --auto-attach
 ```
 
 ```
@@ -90,7 +92,3 @@ sudo tar -czf etc.tar.gz /etc // compession using tar command
 tar -xf etc.tar.gz // expansion
 
 ```
-
-https://access.redhat.com/jbossnetwork/restricted/softwareDetail.html?softwareId=93131&product=jboss.amq.streams&version=&downloadType=distributions/AMQ-STREAMS-1.6.2/amq-streams-1.6.2-ocp-install-examples.zip
-
-https://access.redhat.com/node/3667151/423/0
