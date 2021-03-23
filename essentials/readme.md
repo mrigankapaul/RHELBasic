@@ -1,7 +1,7 @@
 # Essentials
 ```
-ss -ntl
-ls /usr/share/doc
+ss -ntl // to check which port is open
+ls /usr/share/doc // for additional help info
 mkdir -p vagrant/rhel8; cd vagrant/rhel8
 vagrant init generic/rhel8
 vagrant up
@@ -10,6 +10,8 @@ vagrant up
 ```
 
 ```
+hostnamectl // to check for os 
+ip -4 addr show // to check for ipV4 address
 touch file1
 file file1
 ls -l /etc/hosts1 /etc/hosts 2>output // redirecting stderr
@@ -88,3 +90,7 @@ sudo tar -czf etc.tar.gz /etc // compession using tar command
 tar -xf etc.tar.gz // expansion
 
 ```
+
+https://access.redhat.com/jbossnetwork/restricted/softwareDetail.html?softwareId=93131&product=jboss.amq.streams&version=&downloadType=distributions/AMQ-STREAMS-1.6.2/amq-streams-1.6.2-ocp-install-examples.zip
+
+https://access.redhat.com/node/3667151/423/0
